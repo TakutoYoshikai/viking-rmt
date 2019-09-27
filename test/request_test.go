@@ -18,5 +18,14 @@ func TestRequests(t *testing.T) {
   if request == nil {
     t.Error("get transfer requestが失敗した")
   }
+
+  items := requests.GetGameItems("player1")
+  if items == nil {
+    t.Error("GetItemsが失敗した")
+  }
+  item := requests.GetGameItem("player1", items[0].Id)
+  if item == nil {
+    t.Error("GetItemが失敗した")
+  }
   t.Log("Requests終了")
 }

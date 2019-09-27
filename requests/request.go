@@ -8,10 +8,11 @@ import (
   "encoding/json"
 )
 
-const host string = "http://localhost:8081"
+const bankHost string = "http://localhost:8081"
+const gameHost string = "http://localhost:8080"
 
 func Transfer(username string, password string, requestId int) *model.BankAccount {
-  url := host + "/requests/transfer/" + username + "/" + password + "/" + strconv.Itoa(requestId)
+  url := bankHost + "/requests/transfer/" + username + "/" + password + "/" + strconv.Itoa(requestId)
   res, err := http.Get(url)
   if err != nil || res.StatusCode != 200 {
     return nil
@@ -31,7 +32,7 @@ func Transfer(username string, password string, requestId int) *model.BankAccoun
 }
 
 func CreateTransferRequest(username string, password string, to string, amount int) *model.TransferRequest {
-  url := host + "/requests/create/" + username + "/" + password + "/" + to + "/" + strconv.Itoa(amount)
+  url := bankHost + "/requests/create/" + username + "/" + password + "/" + to + "/" + strconv.Itoa(amount)
   res, err := http.Get(url)
   if err != nil || res.StatusCode != 200 {
     return nil
@@ -51,7 +52,7 @@ func CreateTransferRequest(username string, password string, to string, amount i
 }
 
 func GetTransferRequest(username string, password string, requestId int) *model.TransferRequest {
-  url := host + "/requests/show/" + username + "/" + password + "/" + strconv.Itoa(requestId)
+  url := bankHost + "/requests/show/" + username + "/" + password + "/" + strconv.Itoa(requestId)
   res, err := http.Get(url)
   defer res.Body.Close()
   if err != nil || res.StatusCode != 200 {
@@ -68,4 +69,44 @@ func GetTransferRequest(username string, password string, requestId int) *model.
     return nil
   }
   return request
+}
+
+func GetGameItem(username string, itemId int) *model.Item {
+  url := gameHost + "/item/" + username + "/" + strconv.Itoa(itemId)
+  res, err := http.Get(url)
+  defer res.Body.Close()
+  if err != nil || res.StatusCode != 200 {
+    return nil
+  }
+  body, err := ioutil.ReadAll(res.Body)
+  if err != nil {
+    return nil
+  }
+  jsonBytes := ([]byte)(body)
+  item := new(model.Item)
+  err = json.Unmarshal(jsonBytes, item)
+  if err != nil {
+    return nil
+  }
+  return item
+}
+
+func GetGameItems(username string) []model.Item {
+  url := gameHost + "/items/" + username
+  res, err := http.Get(url)
+  defer res.Body.Close()
+  if err != nil || res.StatusCode != 200 {
+    return nil
+  }
+  body, err := ioutil.ReadAll(res.Body)
+  if err != nil {
+    return nil
+  }
+  jsonBytes := ([]byte)(body)
+  items := new([]model.Item)
+  err = json.Unmarshal(jsonBytes, items)
+  if err != nil {
+    return nil
+  }
+  return *items
 }
