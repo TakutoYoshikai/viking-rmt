@@ -4,24 +4,28 @@ var NewestItemId int = 0
 type Item struct {
   Id int
   ItemId int
-  Owner string
+  OwnerBankUserName string
+  Rarity int
+  Name string
   IsBought bool
 }
 
-func NewItem(itemId int, owner string) Item {
+func NewItem(itemId int, ownerBankUserName string, name string, rarity int) Item {
   NewestItemId += 1
   return Item {
     Id: NewestItemId,
     ItemId: itemId,
-    Owner: owner,
+    OwnerBankUserName: ownerBankUserName,
+    Rarity: rarity,
+    Name: name,
     IsBought: false,
   }
 }
 
 var Items []Item = []Item{}
 
-func AddItem(itemId int, owner string) *Item {
-  result := NewItem(itemId, owner)
+func AddItem(itemId int, ownerBankUserName string, name string, rarity int) *Item {
+  result := NewItem(itemId, ownerBankUserName, name, rarity)
   Items = append(Items, result)
   return &result
 }

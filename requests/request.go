@@ -71,7 +71,7 @@ func GetTransferRequest(username string, password string, requestId int) *model.
   return request
 }
 
-func GetGameItem(username string, itemId int) *model.Item {
+func GetGameItem(username string, itemId int) *model.GameItem {
   url := gameHost + "/item/" + username + "/" + strconv.Itoa(itemId)
   res, err := http.Get(url)
   defer res.Body.Close()
@@ -83,7 +83,7 @@ func GetGameItem(username string, itemId int) *model.Item {
     return nil
   }
   jsonBytes := ([]byte)(body)
-  item := new(model.Item)
+  item := new(model.GameItem)
   err = json.Unmarshal(jsonBytes, item)
   if err != nil {
     return nil
@@ -91,7 +91,7 @@ func GetGameItem(username string, itemId int) *model.Item {
   return item
 }
 
-func GetGameItems(username string) []model.Item {
+func GetGameItems(username string) []model.GameItem {
   url := gameHost + "/items/" + username
   res, err := http.Get(url)
   defer res.Body.Close()
@@ -103,7 +103,7 @@ func GetGameItems(username string) []model.Item {
     return nil
   }
   jsonBytes := ([]byte)(body)
-  items := new([]model.Item)
+  items := new([]model.GameItem)
   err = json.Unmarshal(jsonBytes, items)
   if err != nil {
     return nil
