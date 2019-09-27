@@ -5,4 +5,5 @@ type TransferRequest struct {
   From string
   To string
   Amount int
+  Tranfered bool
 }
