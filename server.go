@@ -13,12 +13,12 @@ func CreateServer() *gin.Engine {
   router := gin.Default()
   router.GET("/item/sent/:item_id", func (ctx *gin.Context) {
     itemIdStr := ctx.Param("item_id")
-    itemId, err := strconv.ParseUint(itemIdStr, 10, 64)
+    itemId, err := strconv.Atoi(itemIdStr)
     if err != nil {
       ctx.JSON(400, nil)
       return
     }
-    item := model.GetItem(int(itemId))
+    item := model.GetItem(itemId)
     if !item.IsBought {
       ctx.JSON(400, nil)
       return
@@ -48,12 +48,12 @@ func CreateServer() *gin.Engine {
     bankUsername := ctx.Param("bank_username")
     gameUsername := ctx.Param("game_username")
     itemIdStr := ctx.Param("item_id")
-    itemId, err := strconv.ParseUint(itemIdStr, 10, 64)
+    itemId, err := strconv.Atoi(itemIdStr)
     if err != nil {
       ctx.JSON(400, nil)
       return
     }
-    item := model.GetItem(int(itemId))
+    item := model.GetItem(itemId)
     if item == nil {
       ctx.JSON(404, nil)
       return
