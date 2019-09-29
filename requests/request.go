@@ -12,8 +12,8 @@ import (
 const bankHost string = "http://localhost:8081"
 const gameHost string = "http://localhost:8080"
 
-func Transfer(username string, password string, to string, amount int) *model.BankAccount {
-  url := bankHost + "/transfer/" + username + "/" + password + "/" + strconv.Itoa(amount) + "/" + to
+func Transfer(username string, password string, to string, amount uint64) *model.BankAccount {
+  url := bankHost + "/transfer/" + username + "/" + password + "/" + strconv.Itoa(int(amount)) + "/" + to
   res, err := http.Get(url)
   if err != nil || res.StatusCode != 200 {
     return nil
@@ -51,15 +51,15 @@ func TransferWithRequest(username string, password string, requestId int) *model
   return bankAccount
 }
 
-func RmtTransfer(to string, amount int) *model.BankAccount {
+func RmtTransfer(to string, amount uint64) *model.BankAccount {
   return Transfer(config.GameUsername, config.GamePassword, to, amount)
 }
 func RmtTransferWithRequest(requestId int) *model.BankAccount {
   return TransferWithRequest(config.GameUsername, config.GamePassword, requestId)
 }
 
-func CreateTransferRequest(username string, password string, to string, amount int) *model.TransferRequest {
-  url := bankHost + "/requests/create/" + username + "/" + password + "/" + to + "/" + strconv.Itoa(amount)
+func CreateTransferRequest(username string, password string, to string, amount uint64) *model.TransferRequest {
+  url := bankHost + "/requests/create/" + username + "/" + password + "/" + to + "/" + strconv.Itoa(int(amount))
   res, err := http.Get(url)
   if err != nil || res.StatusCode != 200 {
     return nil

@@ -8,13 +8,14 @@ type Item struct {
   Rarity int
   Name string
   IsBought bool
+  Price uint64
   TransferRequest *TransferRequest
   BuyerGameUsername string
 }
 
 type Items []*Item
 
-func NewItem(itemId int, ownerBankUserName string, name string, rarity int) *Item {
+func NewItem(itemId int, ownerBankUserName string, name string, price uint64, rarity int) *Item {
   NewestItemId += 1
   return &Item {
     Id: NewestItemId,
@@ -28,8 +29,8 @@ func NewItem(itemId int, ownerBankUserName string, name string, rarity int) *Ite
 
 var items Items = Items{}
 
-func AddItem(itemId int, ownerBankUsername string, name string, rarity int) *Item {
-  result := NewItem(itemId, ownerBankUsername, name, rarity)
+func AddItem(itemId int, ownerBankUsername string, name string, price uint64, rarity int) *Item {
+  result := NewItem(itemId, ownerBankUsername, name, price, rarity)
   items = append(items, result)
   return result
 }
