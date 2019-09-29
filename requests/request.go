@@ -5,13 +5,33 @@ import (
   "strconv"
   "io/ioutil"
   "viking-rmt/model"
+  "viking-rmt/config"
   "encoding/json"
 )
 
 const bankHost string = "http://localhost:8081"
 const gameHost string = "http://localhost:8080"
 
-func Transfer(username string, password string, requestId int) *model.BankAccount {
+func Transfer(username string, password string, to string, amount int) *model.BankAccount {
+  url := bankHost + "/transfer/" + username + "/" + password + "/" + strconv.Itoa(amount) + "/" + to
+  res, err := http.Get(url)
+  if err != nil || res.StatusCode != 200 {
+    return nil
+  }
+  defer res.Body.Close()
+  body, err := ioutil.ReadAll(res.Body)
+  if err != nil {
+    return nil
+  }
+  jsonBytes := ([]byte)(body)
+  bankAccount := new(model.BankAccount)
+  err = json.Unmarshal(jsonBytes, bankAccount)
+  if err != nil {
+    return nil
+  }
+  return bankAccount
+}
+func TransferWithRequest(username string, password string, requestId int) *model.BankAccount {
   url := bankHost + "/requests/transfer/" + username + "/" + password + "/" + strconv.Itoa(requestId)
   res, err := http.Get(url)
   if err != nil || res.StatusCode != 200 {
@@ -29,6 +49,13 @@ func Transfer(username string, password string, requestId int) *model.BankAccoun
     return nil
   }
   return bankAccount
+}
+
+func RmtTransfer(to string, amount int) *model.BankAccount {
+  return Transfer(config.GameUsername, config.GamePassword, to, amount)
+}
+func RmtTransferWithRequest(requestId int) *model.BankAccount {
+  return TransferWithRequest(config.GameUsername, config.GamePassword, requestId)
 }
 
 func CreateTransferRequest(username string, password string, to string, amount int) *model.TransferRequest {
@@ -94,10 +121,10 @@ func GetGameItem(username string, itemId int) *model.GameItem {
 func GetGameItems(username string) []model.GameItem {
   url := gameHost + "/items/" + username
   res, err := http.Get(url)
-  defer res.Body.Close()
   if err != nil || res.StatusCode != 200 {
     return nil
   }
+  defer res.Body.Close()
   body, err := ioutil.ReadAll(res.Body)
   if err != nil {
     return nil
@@ -109,4 +136,17 @@ func GetGameItems(username string) []model.GameItem {
     return nil
   }
   return *items
+}
+
+func GetMyGameItems() model.GameItems {
+  return GetGameItems(config.GameUsername)
+}
+
+func GiveItem(username string, password string, to string, gameItemId int) bool {
+  url := gameHost + "/send/" + username + "/" + password + "/" + strconv.Itoa(gameItemId) + "/" + to
+  res, err := http.Get(url)
+  if err != nil || res.StatusCode != 200 {
+    return false
+  }
+  return true
 }

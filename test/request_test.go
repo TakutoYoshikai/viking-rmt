@@ -10,7 +10,11 @@ func TestRequests(t *testing.T) {
   if request == nil {
     t.Error("create transfer requestが失敗した")
   }
-  bankAccount := requests.Transfer("person2", "password2", request.Id)
+  bankAccount := requests.TransferWithRequest("person2", "password2", request.Id)
+  if bankAccount == nil {
+    t.Error("TransferWithRequestが失敗した")
+  }
+  bankAccount = requests.Transfer("person2", "password2", "person1", 100)
   if bankAccount == nil {
     t.Error("Transferが失敗した")
   }
