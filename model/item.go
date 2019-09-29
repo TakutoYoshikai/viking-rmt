@@ -13,7 +13,7 @@ type Item struct {
   BuyerGameUsername string
 }
 
-type Items []*Item
+type Items map[int]*Item
 
 func NewItem(itemId int, ownerBankUserName string, name string, price uint64, rarity int) *Item {
   newestItemId += 1
@@ -31,17 +31,12 @@ var items Items = Items{}
 
 func AddItem(itemId int, ownerBankUsername string, name string, price uint64, rarity int) *Item {
   result := NewItem(itemId, ownerBankUsername, name, price, rarity)
-  items = append(items, result)
+  items[result.Id] = result
   return result
 }
 
 func GetItem(id int) *Item {
-  for _, item := range items {
-    if item.Id == id {
-      return item
-    }
-  }
-  return nil
+  return items[id]
 }
 
 func ItemCount() int {
