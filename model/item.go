@@ -1,5 +1,5 @@
 package model
-var NewestItemId int = 0
+var newestItemId int = 0
 
 type Item struct {
   Id int
@@ -16,9 +16,9 @@ type Item struct {
 type Items []*Item
 
 func NewItem(itemId int, ownerBankUserName string, name string, price uint64, rarity int) *Item {
-  NewestItemId += 1
+  newestItemId += 1
   return &Item {
-    Id: NewestItemId,
+    Id: newestItemId,
     ItemId: itemId,
     OwnerBankUsername: ownerBankUserName,
     Rarity: rarity,
@@ -44,3 +44,6 @@ func GetItem(id int) *Item {
   return nil
 }
 
+func ItemCount() int {
+  return newestItemId
+}
