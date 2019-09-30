@@ -1,19 +1,42 @@
 package model
 var newestItemId int = 0
 
+const (
+  ItemStatusSale = iota
+  ItemStatusOrdered
+  ItemStatusSentItem
+  ItemStatusCompleted
+)
+
 type Item struct {
   Id int
   GameItemId int
   OwnerBankUsername string
   Rarity int
   Name string
-  IsBought bool
+  Status int
   Price uint64
   TransferRequest *TransferRequest
   BuyerGameUsername string
 }
 
 type Items map[int]*Item
+
+func (item *Item) Sale() {
+  item.Status = ItemStatusSale
+}
+
+func (item *Item) Ordered() {
+  item.Status = ItemStatusOrdered
+}
+
+func (item *Item) SentItem() {
+  item.Status = ItemStatusSentItem
+}
+
+func (item *Item) Completed() {
+  item.Status = ItemStatusCompleted
+}
 
 func NewItem(itemId int, ownerBankUserName string, name string, price uint64, rarity int) *Item {
   newestItemId += 1
@@ -24,7 +47,6 @@ func NewItem(itemId int, ownerBankUserName string, name string, price uint64, ra
     Rarity: rarity,
     Name: name,
     Price: price,
-    IsBought: false,
   }
 }
 
@@ -32,7 +54,7 @@ var items Items = Items{}
 
 func AddItem(gameItemId int, ownerBankUsername string, name string, price uint64, rarity int) *Item {
   item := GetItemByGameItemId(gameItemId)
-  if item != nil && !item.IsBought {
+  if item != nil && item.Status != ItemStatusCompleted {
     return nil
   }
   result := NewItem(gameItemId, ownerBankUsername, name, price, rarity)

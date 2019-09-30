@@ -5,10 +5,9 @@ import (
   "strconv"
   "viking-rmt/model"
   "viking-rmt/requests"
+  "viking-rmt/config"
 )
 
-const BankUserName string = "rmt"
-const BankPassword string = "rmt"
 func CreateServer() *gin.Engine {
   router := gin.Default()
   router.GET("/item/sent/:item_id", func (ctx *gin.Context) {
@@ -19,17 +18,21 @@ func CreateServer() *gin.Engine {
       return
     }
     item := model.GetItem(itemId)
-    if item.IsBought {
-      ctx.JSON(400, nil)
-      return
-    }
     if item == nil {
       ctx.JSON(404, nil)
       return
     }
-    if item.TransferRequest == nil {
-      ctx.JSON(500, nil)
+    if item.Status != model.ItemStatusOrdered {
+      ctx.JSON(400, nil)
       return
+    }
+    if item.TransferRequest == nil {
+      ctx.JSON(400, nil)
+      return
+    }
+    item.TransferRequest.Fetch()
+    if !item.TransferRequest.Transfered {
+      ctx.JSON(400, nil)
     }
     myGameItems := requests.GetMyGameItems()
     gameItem := myGameItems.GetGameItem(item.GameItemId)
@@ -47,7 +50,7 @@ func CreateServer() *gin.Engine {
       ctx.JSON(500, nil)
       return
     }
-    item.IsBought = true
+    item.SentItem()
     ctx.JSON(200, nil)
   })
   router.GET("/item/buy/:item_id/:bank_username/:game_username", func (ctx *gin.Context) {
@@ -64,13 +67,18 @@ func CreateServer() *gin.Engine {
       ctx.JSON(404, nil)
       return
     }
-    transferRequest := requests.CreateTransferRequest(BankUserName, BankPassword, bankUsername, item.Price)
+    if item.Status != model.ItemStatusSale {
+      ctx.JSON(400, nil)
+      return
+    }
+    transferRequest := requests.CreateTransferRequest(config.BankUsername, config.BankPassword, bankUsername, item.Price)
     if transferRequest == nil {
       ctx.JSON(500, nil)
       return
     }
     item.TransferRequest = transferRequest
     item.BuyerGameUsername = gameUsername
+    item.Ordered()
     ctx.JSON(200, transferRequest)
   })
   router.GET("/items", func(ctx *gin.Context) {
@@ -101,6 +109,7 @@ func CreateServer() *gin.Engine {
       ctx.JSON(400, nil)
       return
     }
+    item.Sale()
     ctx.JSON(200, item)
   })
   return router
