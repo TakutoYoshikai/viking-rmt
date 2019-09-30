@@ -73,6 +73,9 @@ func CreateServer() *gin.Engine {
     item.BuyerGameUsername = gameUsername
     ctx.JSON(200, transferRequest)
   })
+  router.GET("/items", func(ctx *gin.Context) {
+    ctx.JSON(200, model.GetAllItems())
+  })
   router.GET("/item/create/:bank_username/:game_username/:game_item_id/:price", func (ctx *gin.Context) {
     bankUsername := ctx.Param("bank_username")
     gameUsername := ctx.Param("game_username")

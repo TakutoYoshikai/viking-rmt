@@ -44,6 +44,14 @@ func GetItem(id int) *Item {
   return items[id]
 }
 
+func GetAllItems() []Item {
+  var result []Item = []Item{}
+  for _, item := range items {
+    result = append(result, *item)
+  }
+  return result
+}
+
 func GetItemByGameItemId(gameItemId int) *Item {
   for _, item := range items {
     if item.GameItemId == gameItemId {
