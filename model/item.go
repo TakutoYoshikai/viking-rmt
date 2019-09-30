@@ -3,7 +3,7 @@ var newestItemId int = 0
 
 type Item struct {
   Id int
-  ItemId int
+  GameItemId int
   OwnerBankUsername string
   Rarity int
   Name string
@@ -19,7 +19,7 @@ func NewItem(itemId int, ownerBankUserName string, name string, price uint64, ra
   newestItemId += 1
   return &Item {
     Id: newestItemId,
-    ItemId: itemId,
+    GameItemId: itemId,
     OwnerBankUsername: ownerBankUserName,
     Rarity: rarity,
     Name: name,

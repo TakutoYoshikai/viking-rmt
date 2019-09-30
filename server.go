@@ -32,7 +32,7 @@ func CreateServer() *gin.Engine {
       return
     }
     myGameItems := requests.GetMyGameItems()
-    gameItem := myGameItems.GetGameItem(item.ItemId)
+    gameItem := myGameItems.GetGameItem(item.GameItemId)
     if gameItem == nil {
       ctx.JSON(400, nil)
       return
@@ -67,7 +67,7 @@ func CreateServer() *gin.Engine {
     item.BuyerGameUsername = gameUsername
     ctx.JSON(200, transferRequest)
   })
-  router.GET("/items/create/:bank_username/:game_username/:game_item_id/:price", func (ctx *gin.Context) {
+  router.GET("/item/create/:bank_username/:game_username/:game_item_id/:price", func (ctx *gin.Context) {
     bankUsername := ctx.Param("bank_username")
     gameUsername := ctx.Param("game_username")
     gameItemIdStr := ctx.Param("game_item_id")
