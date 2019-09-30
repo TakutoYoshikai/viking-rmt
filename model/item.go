@@ -30,14 +30,27 @@ func NewItem(itemId int, ownerBankUserName string, name string, price uint64, ra
 
 var items Items = Items{}
 
-func AddItem(itemId int, ownerBankUsername string, name string, price uint64, rarity int) *Item {
-  result := NewItem(itemId, ownerBankUsername, name, price, rarity)
+func AddItem(gameItemId int, ownerBankUsername string, name string, price uint64, rarity int) *Item {
+  item := GetItemByGameItemId(gameItemId)
+  if item != nil && !item.IsBought {
+    return nil
+  }
+  result := NewItem(gameItemId, ownerBankUsername, name, price, rarity)
   items[result.Id] = result
   return result
 }
 
 func GetItem(id int) *Item {
   return items[id]
+}
+
+func GetItemByGameItemId(gameItemId int) *Item {
+  for _, item := range items {
+    if item.GameItemId == gameItemId {
+      return item
+    }
+  }
+  return nil
 }
 
 func ItemCount() int {
