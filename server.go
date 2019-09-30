@@ -19,7 +19,7 @@ func CreateServer() *gin.Engine {
       return
     }
     item := model.GetItem(itemId)
-    if !item.IsBought {
+    if item.IsBought {
       ctx.JSON(400, nil)
       return
     }
@@ -42,6 +42,12 @@ func CreateServer() *gin.Engine {
       ctx.JSON(500, nil)
       return
     }
+    success := requests.GiveItem("rmt", "rmt", item.BuyerGameUsername, gameItem.Id)
+    if !success {
+      ctx.JSON(500, nil)
+      return
+    }
+    item.IsBought = true
     ctx.JSON(200, nil)
   })
   router.GET("/item/buy/:item_id/:bank_username/:game_username", func (ctx *gin.Context) {

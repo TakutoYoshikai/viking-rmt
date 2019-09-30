@@ -23,6 +23,7 @@ func NewItem(itemId int, ownerBankUserName string, name string, price uint64, ra
     OwnerBankUsername: ownerBankUserName,
     Rarity: rarity,
     Name: name,
+    Price: price,
     IsBought: false,
   }
 }
