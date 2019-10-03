@@ -12,6 +12,7 @@ type Item struct {
   Id int
   GameItemId int
   OwnerBankUsername string
+  OwnerGameUsername string
   Rarity int
   Name string
   Status int
@@ -38,12 +39,13 @@ func (item *Item) Completed() {
   item.Status = ItemStatusCompleted
 }
 
-func NewItem(itemId int, ownerBankUserName string, name string, price uint64, rarity int) *Item {
+func NewItem(itemId int, ownerBankUsername string, ownerGameUsername string, name string, price uint64, rarity int) *Item {
   newestItemId += 1
   return &Item {
     Id: newestItemId,
     GameItemId: itemId,
-    OwnerBankUsername: ownerBankUserName,
+    OwnerGameUsername: ownerGameUsername,
+    OwnerBankUsername: ownerBankUsername,
     Rarity: rarity,
     Name: name,
     Price: price,
@@ -52,12 +54,12 @@ func NewItem(itemId int, ownerBankUserName string, name string, price uint64, ra
 
 var items Items = Items{}
 
-func AddItem(gameItemId int, ownerBankUsername string, name string, price uint64, rarity int) *Item {
+func AddItem(gameItemId int, ownerBankUsername string, ownerGameUsername string, name string, price uint64, rarity int) *Item {
   item := GetItemByGameItemId(gameItemId)
   if item != nil && item.Status != ItemStatusCompleted {
     return nil
   }
-  result := NewItem(gameItemId, ownerBankUsername, name, price, rarity)
+  result := NewItem(gameItemId, ownerBankUsername, ownerGameUsername, name, price, rarity)
   items[result.Id] = result
   return result
 }

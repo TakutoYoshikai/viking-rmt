@@ -104,7 +104,7 @@ func CreateServer() *gin.Engine {
       ctx.JSON(400, nil)
       return
     }
-    item := model.AddItem(gameItem.Id, bankUsername, gameItem.Name, price, gameItem.Rarity)
+    item := model.AddItem(gameItem.Id, bankUsername, gameUsername, gameItem.Name, price, gameItem.Rarity)
     if item == nil {
       ctx.JSON(400, nil)
       return
