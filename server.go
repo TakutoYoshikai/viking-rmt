@@ -10,6 +10,29 @@ import (
 
 func CreateServer() *gin.Engine {
   router := gin.Default()
+  router.GET("/item/transfered/:item_id", func (ctx *gin.Context) {
+    itemIdStr := ctx.Param("item_id")
+    itemId, err := strconv.Atoi(itemIdStr)
+    if err != nil {
+      ctx.JSON(400, nil)
+      return
+    }
+    item := model.GetItem(itemId)
+    if item.TransferRequest == nil {
+      ctx.JSON(400, nil)
+      return
+    }
+    if !item.TransferRequest.Fetch() {
+      ctx.JSON(500, nil)
+      return
+    }
+    if !item.TransferRequest.Transfered {
+      ctx.JSON(400, nil)
+      return
+    }
+    item.Status = model.ItemStatusTransfered
+    ctx.JSON(200, nil)
+  })
   router.GET("/item/sent/:item_id", func (ctx *gin.Context) {
     itemIdStr := ctx.Param("item_id")
     itemId, err := strconv.Atoi(itemIdStr)
@@ -22,7 +45,7 @@ func CreateServer() *gin.Engine {
       ctx.JSON(404, nil)
       return
     }
-    if item.Status != model.ItemStatusOrdered {
+    if item.Status != model.ItemStatusTransfered {
       ctx.JSON(400, nil)
       return
     }

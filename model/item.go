@@ -4,6 +4,7 @@ var newestItemId int = 0
 const (
   ItemStatusSale = iota
   ItemStatusOrdered
+  ItemStatusTransfered
   ItemStatusSentItem
   ItemStatusCompleted
 )

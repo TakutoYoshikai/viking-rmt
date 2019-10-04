@@ -16,26 +16,27 @@ type TransferRequest struct {
   Transfered bool
 }
 
-func (transferRequest *TransferRequest) Fetch() {
+func (transferRequest *TransferRequest) Fetch() bool {
   url := config.BankHost + "/requests/show/" + config.BankUsername + "/" + config.BankPassword + "/" + strconv.Itoa(transferRequest.Id)
   res, err := http.Get(url)
   if err != nil || res.StatusCode != 200 {
-    return
+    return false
   }
   defer res.Body.Close()
   body, err := ioutil.ReadAll(res.Body)
   if err != nil {
-    return
+    return false
   }
   jsonBytes := ([]byte)(body)
   request := new(TransferRequest)
   err = json.Unmarshal(jsonBytes, request)
   if err != nil {
-    return
+    return false
   }
   transferRequest.Id = request.Id
   transferRequest.From = request.From
   transferRequest.To = request.To
   transferRequest.Amount = request.Amount
   transferRequest.Transfered = request.Transfered
+  return true
 }

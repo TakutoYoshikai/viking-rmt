@@ -6,15 +6,18 @@ import (
 )
 
 func TestItem(t *testing.T) {
-  item := model.AddItem(1, "owner", "item1", 100, 5)
+  item := model.AddItem(1, "ownerbank", "ownergame", "item1", 100, 5)
   if item == nil {
     t.Error("itemが作れなかった")
   }
   if item.GameItemId != 1 {
     t.Error("itemのgameitemidが設定されていない")
   }
-  if item.OwnerBankUsername != "owner" {
+  if item.OwnerBankUsername != "ownerbank" {
     t.Error("itemのowner bank usernameが設定されていない")
+  }
+  if item.OwnerGameUsername != "ownergame" {
+    t.Error("itemのowner game usernameが設定されていない")
   }
   if item.Name != "item1" {
     t.Error("itemのnameが設定されていない")
