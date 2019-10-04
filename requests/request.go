@@ -13,10 +13,13 @@ import (
 func Transfer(username string, password string, to string, amount uint64) *model.BankAccount {
   url := config.BankHost + "/transfer/" + username + "/" + password + "/" + strconv.Itoa(int(amount)) + "/" + to
   res, err := http.Get(url)
-  if err != nil || res.StatusCode != 200 {
+  if err != nil {
     return nil
   }
   defer res.Body.Close()
+  if res.StatusCode != 200 {
+    return nil
+  }
   body, err := ioutil.ReadAll(res.Body)
   if err != nil {
     return nil
@@ -32,10 +35,13 @@ func Transfer(username string, password string, to string, amount uint64) *model
 func TransferWithRequest(username string, password string, requestId int) *model.BankAccount {
   url := config.BankHost + "/requests/transfer/" + username + "/" + password + "/" + strconv.Itoa(requestId)
   res, err := http.Get(url)
-  if err != nil || res.StatusCode != 200 {
+  if err != nil {
     return nil
   }
   defer res.Body.Close()
+  if res.StatusCode != 200 {
+    return nil
+  }
   body, err := ioutil.ReadAll(res.Body)
   if err != nil {
     return nil
@@ -59,10 +65,13 @@ func RmtTransferWithRequest(requestId int) *model.BankAccount {
 func CreateTransferRequest(username string, password string, to string, amount uint64) *model.TransferRequest {
   url := config.BankHost + "/requests/create/" + username + "/" + password + "/" + to + "/" + strconv.Itoa(int(amount))
   res, err := http.Get(url)
-  if err != nil || res.StatusCode != 200 {
+  if err != nil {
     return nil
   }
   defer res.Body.Close()
+  if res.StatusCode != 200 {
+    return nil
+  }
   body, err := ioutil.ReadAll(res.Body)
   if err != nil {
     return nil
@@ -79,8 +88,11 @@ func CreateTransferRequest(username string, password string, to string, amount u
 func GetTransferRequest(username string, password string, requestId int) *model.TransferRequest {
   url := config.BankHost + "/requests/show/" + username + "/" + password + "/" + strconv.Itoa(requestId)
   res, err := http.Get(url)
+  if err != nil {
+    return nil
+  }
   defer res.Body.Close()
-  if err != nil || res.StatusCode != 200 {
+  if res.StatusCode != 200 {
     return nil
   }
   body, err := ioutil.ReadAll(res.Body)
@@ -99,8 +111,11 @@ func GetTransferRequest(username string, password string, requestId int) *model.
 func GetGameItem(username string, itemId int) *model.GameItem {
   url := config.GameHost + "/item/" + username + "/" + strconv.Itoa(itemId)
   res, err := http.Get(url)
+  if err != nil {
+    return nil
+  }
   defer res.Body.Close()
-  if err != nil || res.StatusCode != 200 {
+  if res.StatusCode != 200 {
     return nil
   }
   body, err := ioutil.ReadAll(res.Body)
@@ -119,10 +134,13 @@ func GetGameItem(username string, itemId int) *model.GameItem {
 func GetGameItems(username string) []model.GameItem {
   url := config.GameHost + "/items/" + username
   res, err := http.Get(url)
-  if err != nil || res.StatusCode != 200 {
+  if err != nil {
     return nil
   }
   defer res.Body.Close()
+  if res.StatusCode != 200 {
+    return nil
+  }
   body, err := ioutil.ReadAll(res.Body)
   if err != nil {
     return nil
@@ -143,7 +161,11 @@ func GetMyGameItems() model.GameItems {
 func GiveItem(username string, password string, to string, gameItemId int) bool {
   url := config.GameHost + "/send/" + username + "/" + password + "/" + strconv.Itoa(gameItemId) + "/" + to
   res, err := http.Get(url)
-  if err != nil || res.StatusCode != 200 {
+  if err != nil {
+    return false
+  }
+  defer res.Body.Close()
+  if res.StatusCode != 200 {
     return false
   }
   return true
