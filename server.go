@@ -84,6 +84,19 @@ func CreateServer() *gin.Engine {
   router.GET("/items", func(ctx *gin.Context) {
     ctx.JSON(200, model.GetAllItems())
   })
+  router.GET("/item/show/:id", func (ctx *gin.Context) {
+    itemIdStr := ctx.Param("id")
+    itemId, err := strconv.Atoi(itemIdStr)
+    if err != nil {
+      ctx.JSON(400, nil)
+      return
+    }
+    item := model.GetItem(itemId)
+    if item == nil {
+      ctx.JSON(404, nil)
+    }
+    ctx.JSON(200, item)
+  })
   router.GET("/item/create/:bank_username/:game_username/:game_item_id/:price", func (ctx *gin.Context) {
     bankUsername := ctx.Param("bank_username")
     gameUsername := ctx.Param("game_username")
