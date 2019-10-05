@@ -63,6 +63,7 @@ func CreateServer() *gin.Engine {
       ctx.JSON(400, nil)
       return
     }
+    item.SentItem()
     account := requests.Transfer("rmt", "rmt", item.OwnerBankUsername, uint64(float64(item.TransferRequest.Amount) * 0.9))
     if account == nil {
       ctx.JSON(500, nil)
@@ -73,7 +74,7 @@ func CreateServer() *gin.Engine {
       ctx.JSON(500, nil)
       return
     }
-    item.SentItem()
+    item.Completed()
     ctx.JSON(200, nil)
   })
   router.GET("/item/buy/:item_id/:bank_username/:game_username", func (ctx *gin.Context) {
