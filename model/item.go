@@ -1,4 +1,7 @@
 package model
+import (
+  "time"
+)
 var newestItemId int = 0
 
 const (
@@ -20,6 +23,7 @@ type Item struct {
   Price uint64
   TransferRequest *TransferRequest
   BuyerGameUsername string
+  CreatedAt time.Time
 }
 
 type Items map[int]*Item
@@ -50,6 +54,7 @@ func NewItem(itemId int, ownerBankUsername string, ownerGameUsername string, nam
     Rarity: rarity,
     Name: name,
     Price: price,
+    CreatedAt: time.Now(),
   }
 }
 
