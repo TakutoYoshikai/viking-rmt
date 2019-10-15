@@ -1,9 +1,8 @@
 package main
 
-import (
-)
+import ()
 
 func main() {
-  router := CreateServer()
-  router.Run(":8082")
+	router := CreateServer()
+	router.Run(":8082")
 }
